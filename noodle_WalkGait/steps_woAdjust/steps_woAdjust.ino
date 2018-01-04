@@ -1,6 +1,12 @@
 
 #include <SoftwareServo.h>
+#include <Wire.h>
+#include <LSM303.h> //accelerometer?
 
+LSM303 compass;
+LSM303::vector<int16_t> running_min = {32767, 32767, 32767}, running_max = {-32768, -32768, -32768};
+
+int tiltValue = 2000; //accelerometer? 
  
 SoftwareServo spinservo1;
 SoftwareServo liftservo1;
@@ -14,6 +20,7 @@ SoftwareServo headservo;
   int ledRED = 11;
   int ledGRN = 12;
   int ledBLU = 13;
+  int beepPin = A0; //beeper
  
 int pos = 0;    // variable to store the servo position 
  
@@ -130,6 +137,16 @@ myDelay(500);
 liftservo2.write(150);
 myDelay(1000);
 
+
+//accelerometer and beeper stuff
+ Wire.begin();
+  compass.init();
+  compass.enableDefault();
+
+  SoftwareServo::refresh();
+  tone(beepPin, 3000);
+  myDelay(500);
+  noTone(beepPin);
 } 
  
  
